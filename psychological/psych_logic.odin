@@ -1,11 +1,8 @@
 package psychological
 
 import ut "../utility"
-import sdr "../soldier"
 
-update_psychology :: proc(soldier: ^sdr.Soldier, incoming_fire: f32, exertion: f32, dt: f32) {
-    psych := soldier.psychology
-    physical := soldier.physical_attributes
+update_psychology :: proc(psych: ^PsychologicalState, incoming_fire: f32, exertion: f32, endurance: f32, dt: f32) {
 
     // Checks for states of soldiers which should not be updated.
     if psych.physical_state == .Dead || psych.physical_state == .Incapacitated {
@@ -30,7 +27,7 @@ update_psychology :: proc(soldier: ^sdr.Soldier, incoming_fire: f32, exertion: f
     // load_level: f32 = ut.clamp_psychology(carried_load)
     // load_modifier: f32 = 1.0 + load_level * 0.75
 
-    endurance: f32 = ut.clamp_physical(physical.endurance)
+    endurance: f32 = ut.clamp_physical(endurance)
     endurance_modifier: f32 = 1.25 - endurance * 0.50
     
     fatigue_gain: f32 = exertion_level * 0.08 * endurance_modifier
@@ -38,7 +35,7 @@ update_psychology :: proc(soldier: ^sdr.Soldier, incoming_fire: f32, exertion: f
 
     psych.fatigue += (fatigue_gain - fatigue_recovery) * dt
 
-    clamp_state(psych)
+    clamp_state(psych, endurance)
 
     update_morale(psych, dt)
     update_mental_state(psych)
@@ -104,11 +101,11 @@ update_stamina_state :: proc(psych: ^PsychologicalState) {
     }
 }
 
-clamp_state :: proc(psych: ^PsychologicalState) {
+clamp_state :: proc(psych: ^PsychologicalState, endurance: f32) {
     psych.suppression = ut.clamp_psychology(psych.suppression)
     psych.fear = ut.clamp_psychology(psych.fear)
     psych.confidence = ut.clamp_psychology(psych.confidence)
     psych.morale = ut.clamp_psychology(psych.morale)
     psych.fatigue = ut.clamp_physical(psych.fatigue)
-    psych.endurance = ut.clamp_physical(psych.endurance)
+    endurance := ut.clamp_physical(endurance)
 }

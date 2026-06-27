@@ -35,13 +35,13 @@ spawn_soldier :: proc() {
 
 }
 
-update_soldier :: proc(soldier: Soldier, incoming_fire: f32, exertion: f32, dt: f32) {
+update_soldier :: proc(soldier: ^Soldier, incoming_fire: f32, exertion: f32, dt: f32) {
     // Checks if soldier is dead
     if !soldier.is_active {
         return
     }
 
-    psych.update_psychology(soldier, incoming_fire, exertion, dt)
+    psych.update_psychology(&soldier.psychology, incoming_fire, exertion, soldier.physical_attributes.endurance, dt)
 
     if soldier.psychology.physical_state == .Dead {
         soldier.is_active = false
