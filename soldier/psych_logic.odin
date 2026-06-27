@@ -2,9 +2,9 @@ package soldier
 
 import ut "../utility"
 
-update_psychology :: proc(psych: ^PsychologicalState, physical_state: ^PhysicalState, incoming_fire: f32, exertion: f32, endurance: f32, dt: f32) {
+update_psychology :: proc(psych: ^PsychologicalState, physcial_attributes: ^PhysicalAttributes, incoming_fire: f32, exertion: f32, dt: f32) {
     // Checks for states of soldiers which should not be updated.
-    if physical_state^ == .Dead || physical_state^ == .Incapacitated {
+    if physcial_attributes^.physical_state == .Dead || physcial_attributes^.physical_state == .Incapacitated {
         return
     }
 
@@ -26,15 +26,15 @@ update_psychology :: proc(psych: ^PsychologicalState, physical_state: ^PhysicalS
     // load_level: f32 = ut.clamp_psychology(carried_load)
     // load_modifier: f32 = 1.0 + load_level * 0.75
 
-    endurance: f32 = ut.clamp_physical(endurance)
-    endurance_modifier: f32 = 1.25 - endurance * 0.50
+    endurance_value: f32 = ut.clamp_physical(physcial_attributes.endurance)
+    endurance_modifier: f32 = 1.25 - endurance_value * 0.50
     
     fatigue_gain: f32 = exertion_level * 0.08 * endurance_modifier
-    fatigue_recovery: f32 = 0.015 + endurance * 0.010
+    fatigue_recovery: f32 = 0.015 + endurance_value * 0.010
 
     psych.fatigue += (fatigue_gain - fatigue_recovery) * dt
 
-    clamp_state(psych, endurance)
+    clamp_state(psych, physcial_attributes)
 
     update_morale(psych, dt)
     update_mental_state(psych)
@@ -98,11 +98,11 @@ update_stamina_state :: proc(psych: ^PsychologicalState) {
     }
 }
 
-clamp_state :: proc(psych: ^PsychologicalState, endurance: f32) {
+clamp_state :: proc(psych: ^PsychologicalState, physical: ^PhysicalAttributes) {
     psych.suppression = ut.clamp_psychology(psych.suppression)
     psych.fear = ut.clamp_psychology(psych.fear)
     psych.confidence = ut.clamp_psychology(psych.confidence)
     psych.morale = ut.clamp_psychology(psych.morale)
     psych.fatigue = ut.clamp_physical(psych.fatigue)
-    endurance := ut.clamp_physical(endurance)
+    physical.endurance = ut.clamp_physical(physical.endurance)
 }

@@ -25,6 +25,7 @@ default_soldier :: proc(id: SoldierID) -> Soldier {
         identity = default_identity(),
         rank = .Private,
         psychology_state = default_psych_state(),
+        physical_attributes = default_physical_attributes(),
         is_active = true,
     }
 }
@@ -39,7 +40,7 @@ update_soldier :: proc(soldier: ^Soldier, incoming_fire: f32, exertion: f32, dt:
         return
     }
 
-    update_psychology(&soldier.psychology_state, &soldier.physical_attributes.physical_state, incoming_fire, exertion, soldier.physical_attributes.endurance, dt)
+    update_psychology(&soldier.psychology_state, &soldier.physical_attributes, incoming_fire, exertion, dt)
 
     if soldier.physical_attributes.physical_state == .Dead {
         soldier.is_active = false

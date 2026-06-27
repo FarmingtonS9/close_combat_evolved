@@ -15,8 +15,8 @@ PsychologicalEvent :: enum {
     ReinforcementsArrived,
 }
 
-apply_event :: proc(psych: ^PsychologicalState, event: PsychologicalEvent, physical_state: ^PhysicalState, intensity: f32 = 1.0, endurance: f32) {
-    if physical_state^ == .Dead || physical_state^ == .Incapacitated {
+apply_event :: proc(psych: ^PsychologicalState, event: PsychologicalEvent, physical_attr: ^PhysicalAttributes, intensity: f32 = 1.0, endurance: f32) {
+    if physical_attr^.physical_state == .Dead || physical_attr^.physical_state == .Incapacitated {
         return
     }
 
@@ -69,6 +69,6 @@ apply_event :: proc(psych: ^PsychologicalState, event: PsychologicalEvent, physi
 
     }
 
-    clamp_state(psych, endurance)
+    clamp_state(psych, physical_attr)
     
 }
