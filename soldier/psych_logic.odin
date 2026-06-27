@@ -1,11 +1,10 @@
-package psychological
+package soldier
 
 import ut "../utility"
 
-update_psychology :: proc(psych: ^PsychologicalState, incoming_fire: f32, exertion: f32, endurance: f32, dt: f32) {
-
+update_psychology :: proc(psych: ^PsychologicalState, physical_state: ^PhysicalState, incoming_fire: f32, exertion: f32, endurance: f32, dt: f32) {
     // Checks for states of soldiers which should not be updated.
-    if psych.physical_state == .Dead || psych.physical_state == .Incapacitated {
+    if physical_state^ == .Dead || physical_state^ == .Incapacitated {
         return
     }
 

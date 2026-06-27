@@ -22,7 +22,9 @@ GAME_TITLE :: "Close Combat Evolved"
 main :: proc() {
     fmt.println("Hello World!")
 
-    soldier1: soldier.Soldier = soldier.default_soldier()
+    solider_id : soldier.SoldierID = 1
+
+    soldier1: soldier.Soldier = soldier.default_soldier(solider_id)
 
     fmt.println(soldier1)
     soldier.print_state_of_soldier(soldier1)

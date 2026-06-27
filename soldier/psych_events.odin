@@ -1,4 +1,4 @@
-package psychological
+package soldier
 
 import ut "../utility"
 
@@ -15,8 +15,8 @@ PsychologicalEvent :: enum {
     ReinforcementsArrived,
 }
 
-apply_event :: proc(psych: ^PsychologicalState, event: PsychologicalEvent, intensity: f32 = 1.0, endurance: f32) {
-    if psych.physical_state == .Dead || psych.physical_state == .Incapacitated {
+apply_event :: proc(psych: ^PsychologicalState, event: PsychologicalEvent, physical_state: ^PhysicalState, intensity: f32 = 1.0, endurance: f32) {
+    if physical_state^ == .Dead || physical_state^ == .Incapacitated {
         return
     }
 

@@ -1,4 +1,5 @@
-package psychological
+package soldier
+
 
 MentalState :: enum {
     Stable,
@@ -14,13 +15,6 @@ StaminaState :: enum {
     Winded,
     Fatigued,
     Exhausted,
-}
-
-PhysicalState :: enum {
-    Healthy,
-    Injured,
-    Incapacitated,
-    Dead
 }
 
 PsychologicalState :: struct {
@@ -39,7 +33,6 @@ default_state :: proc() -> PsychologicalState {
     return PsychologicalState {
         mental_state = .Stable,
         stamina_state = .Rested,
-        physical_state = .Healthy,
 
         suppression = 0.0,
         fear = 0.0,

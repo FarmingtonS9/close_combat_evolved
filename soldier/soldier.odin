@@ -6,15 +6,13 @@ import "core:fmt"
 // User library
 // import "weapons" (library)
 
-import psych "../psychological"
-
 SoldierID :: distinct u32
 
 Soldier :: struct {
     id: SoldierID,
     identity: Identity,
     rank: BasicRank,
-    psychology: psych.PsychologicalState,
+    psychology_state: PsychologicalState,
     physical_attributes: PhysicalAttributes,
 
     is_active: bool,
@@ -26,7 +24,7 @@ default_soldier :: proc(id: SoldierID) -> Soldier {
         id = id,
         identity = default_identity(),
         rank = .Private,
-        psychology = psych.default_state(),
+        psychology_state = default_state(),
         is_active = true,
     }
 }
@@ -41,9 +39,9 @@ update_soldier :: proc(soldier: ^Soldier, incoming_fire: f32, exertion: f32, dt:
         return
     }
 
-    psych.update_psychology(&soldier.psychology, incoming_fire, exertion, soldier.physical_attributes.endurance, dt)
+    update_psychology(&soldier.psychology_state, &soldier.physical_attributes.physical_state, incoming_fire, exertion, soldier.physical_attributes.endurance, dt)
 
-    if soldier.psychology.physical_state == .Dead {
+    if soldier.physical_attributes.physical_state == .Dead {
         soldier.is_active = false
     }
 }
