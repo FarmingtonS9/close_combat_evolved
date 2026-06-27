@@ -4,7 +4,7 @@ PhysicalState :: enum {
     Healthy,
     Injured,
     Incapacitated,
-    Dead
+    Dead,
 }
 
 PhysicalAttributes :: struct {

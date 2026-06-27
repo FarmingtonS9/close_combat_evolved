@@ -71,8 +71,6 @@ update_mental_state :: proc(psych: ^PsychologicalState) {
                 psych.mental_state = .Cowering
             }
             return
-
-        case: 
     }
 
     if psych.morale < 0.15 && psych.fear > 0.75 {

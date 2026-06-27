@@ -20,7 +20,6 @@ StaminaState :: enum {
 PsychologicalState :: struct {
     mental_state: MentalState,
     stamina_state: StaminaState,
-    physical_state: PhysicalState,
 
     suppression: f32,
     fear: f32,
@@ -29,7 +28,7 @@ PsychologicalState :: struct {
     fatigue: f32,
 }
 
-default_state :: proc() -> PsychologicalState {
+default_psych_state :: proc() -> PsychologicalState {
     return PsychologicalState {
         mental_state = .Stable,
         stamina_state = .Rested,

@@ -24,7 +24,7 @@ default_soldier :: proc(id: SoldierID) -> Soldier {
         id = id,
         identity = default_identity(),
         rank = .Private,
-        psychology_state = default_state(),
+        psychology_state = default_psych_state(),
         is_active = true,
     }
 }
