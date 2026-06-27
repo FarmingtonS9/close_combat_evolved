@@ -1,8 +1,12 @@
 package psychological
 
 import ut "../utility"
+import sdr "../soldier"
 
-update_psychology :: proc(psych: ^PsychologicalState, incoming_fire: f32, exertion: f32, dt: f32) {
+update_psychology :: proc(soldier: ^sdr.Soldier, incoming_fire: f32, exertion: f32, dt: f32) {
+    psych := soldier.psychology
+    physical := soldier.physical_attributes
+
     // Checks for states of soldiers which should not be updated.
     if psych.physical_state == .Dead || psych.physical_state == .Incapacitated {
         return
@@ -26,7 +30,7 @@ update_psychology :: proc(psych: ^PsychologicalState, incoming_fire: f32, exerti
     // load_level: f32 = ut.clamp_psychology(carried_load)
     // load_modifier: f32 = 1.0 + load_level * 0.75
 
-    endurance: f32 = ut.clamp_physical(psych.endurance)
+    endurance: f32 = ut.clamp_physical(physical.endurance)
     endurance_modifier: f32 = 1.25 - endurance * 0.50
     
     fatigue_gain: f32 = exertion_level * 0.08 * endurance_modifier

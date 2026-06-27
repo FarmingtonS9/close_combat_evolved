@@ -1,6 +1,18 @@
 package soldier
 
-// Cood feature idea: Have soldiers earn money
+BasicRank :: enum {
+    Private,
+    PrivateFirstClass,
+    Corporal,
+    Sergeant,
+    StaffSergeant,
+    WarrantOfficer,
+    SecondLieutenant,
+    FirstLieutenant,
+    Captain, 
+}
+
+// Cool feature idea: Have soldiers earn money
 // US Mid-Late WW2 Ranks
 // [Link](https://veteran-voices.com/wp-content/uploads/2018/11/wwii-us-army-rank-insignia.pdf)
 USEnlistedRank :: enum {

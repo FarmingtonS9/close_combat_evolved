@@ -33,7 +33,6 @@ PsychologicalState :: struct {
     confidence: f32,
     morale: f32,
     fatigue: f32,
-    endurance: f32,
 }
 
 default_state :: proc() -> PsychologicalState {
@@ -47,6 +46,5 @@ default_state :: proc() -> PsychologicalState {
         confidence = 0.5,
         morale = 0.5,
         fatigue = 0.0,
-        endurance = 0.5,
     }
 }
