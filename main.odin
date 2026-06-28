@@ -31,17 +31,22 @@ main :: proc() {
     game_world := world.init_world()
     defer world.destroy_world(&game_world)
 
-    soldier1 := world.spawn_soldier(&game_world, {300, 300})
-    soldier2 := world.spawn_soldier(&game_world, {330, 300})
-    soldier3 := world.spawn_soldier(&game_world, {360, 300})
-    soldier4 := world.spawn_soldier(&game_world, {390, 300})
+    squad_origin := soldier.Position {
+        x = 345,
+        y = 300,
+    }
 
-    squad_1 := world.create_squad(&game_world)
+    soldier1 := world.spawn_soldier(&game_world, {345, 270})
+    soldier2 := world.spawn_soldier(&game_world, {320, 300})
+    soldier3 := world.spawn_soldier(&game_world, {370, 300})
+    soldier4 := world.spawn_soldier(&game_world, {345, 330})
 
-    world.add_soldier_to_squad(&game_world, squad_1, soldier1)
-    world.add_soldier_to_squad(&game_world, squad_1, soldier2)
-    world.add_soldier_to_squad(&game_world, squad_1, soldier3)
-    world.add_soldier_to_squad(&game_world, squad_1, soldier4)
+    squad_1 := world.create_squad(&game_world, squad_origin)
+
+    world.add_soldier_to_squad(&game_world, squad_1, soldier1, {0, 30})
+    world.add_soldier_to_squad(&game_world, squad_1, soldier2, {-25, 0})
+    world.add_soldier_to_squad(&game_world, squad_1, soldier3, {25, 0})
+    world.add_soldier_to_squad(&game_world, squad_1, soldier4, {0, -30})
 
     world.set_squad_leader(&game_world, squad_1, soldier1)
 

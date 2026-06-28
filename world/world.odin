@@ -1,5 +1,6 @@
 package world
 
+import "core:mem"
 import sdr "../soldier"
 
 World :: struct {
@@ -133,11 +134,11 @@ find_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Soldier {
     return nil
 }
 
-create_squad :: proc(world: ^World) -> sdr.SquadID {
+create_squad :: proc(world: ^World, origin: sdr.Position) -> sdr.SquadID {
     squad_id := world.next_squad_id
     world.next_squad_id += 1
 
-    new_squad := sdr.default_squad(squad_id)
+    new_squad := sdr.default_squad(squad_id, origin)
     append(&world.squads, new_squad)
 
     return squad_id
@@ -149,8 +150,8 @@ find_soldier_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Squ
             continue
         }
 
-        for member_id in squad.soldier_ids {
-            if member_id == soldier_id {
+        for member in squad.members {
+            if member.soldier_id == soldier_id {
                 return &squad
             }
         }
@@ -159,7 +160,7 @@ find_soldier_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Squ
     return nil
 }
 
-add_soldier_to_squad :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.SoldierID) -> bool {
+add_soldier_to_squad :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.SoldierID, offset: sdr.Position) -> bool {
     squad := find_squad(world, squad_id)
 
     if squad == nil || !squad.is_active {
@@ -178,7 +179,10 @@ add_soldier_to_squad :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: s
         return false
     }
 
-    append(&squad.soldier_ids, soldier_id)
+    append(&squad.members, sdr.SquadMember {
+        soldier_id = soldier_id,
+        offset = offset
+    })
 
     if squad.leader_id == sdr.SoldierID(0) {
         squad.leader_id = soldier_id
@@ -194,10 +198,62 @@ set_squad_leader :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.S
         return false
     }
 
-    for member_id in squad.soldier_ids {
-        squad.leader_id = soldier_id
+    for member in squad.members {
+        if member.soldier_id != soldier_id {
+            continue
+        }
+
+        squad.leader_id =soldier_id
         return true
     }
 
     return false
+}
+
+is_selected_squad_member :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
+    if world.selected_squad_id == sdr.NumSquad {
+        return false
+    }
+
+    squad := find_squad(world, world.selected_squad_id)
+
+    if squad == nil {
+        return false
+    }
+
+    return squad.leader_id == soldier_id
+}
+
+is_soldier_in_selected_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
+    if world.selected_squad_id == sdr.NumSquad {
+        return false
+    }
+
+    squad := find_squad(world, world.selected_squad_id)
+
+    if squad == nil || !squad.is_active {
+        return false
+    }
+
+    for member in squad.members {
+        if member.soldier_id == soldier_id {
+            return true
+        }
+    }
+
+    return false
+}
+
+is_squad_leader_selected :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
+    if world.selected_squad_id == sdr.NumSquad {
+        return false
+    }
+
+    squad := find_squad(world, world.selected_squad_id)
+
+    if squad == nil || !squad.is_active {
+        return false
+    }
+
+    return squad.leader_id == soldier_id
 }

@@ -19,23 +19,24 @@ draw_game :: proc(world: ^wrd.World) {
 
         soldier_colour := rl.BLUE
 
-        if world.selected_soldier_id == soldier.id {
+        if wrd.is_selected_squad_member(world, soldier.id) {
             soldier_colour = rl.RED
 
             if soldier.movement.has_destination {
                 destination_x := i32(soldier.movement.destination.x)
                 destination_y := i32(soldier.movement.destination.y)
 
-                rl.DrawCircleLines(destination_x, destination_y, 6.0, rl.RED)
+                rl.DrawCircleLines(destination_x, destination_y, 5.0, rl.RED)
 
                 rl.DrawLine(x, y, destination_x, destination_y, rl.GRAY)
             }
-
-            rl.DrawCircleLines(x, y, 13.0, rl.RED)
-            
         }
 
-        rl.DrawCircle(x, y, 8.0, rl.BLUE)
+        if wrd.is_squad_leader_selected(world, soldier.id) {
+            rl.DrawCircleLines(x, y, 13.0, rl.GOLD)
+        }
+
+        rl.DrawCircle(x, y, 8.0, soldier_colour)
 
         id_text : string = fmt.tprintf("%v", soldier.id)
         id_text_cstring := strings.clone_to_cstring(id_text)
@@ -45,7 +46,7 @@ draw_game :: proc(world: ^wrd.World) {
         delete(id_text_cstring)
     }
 
-    count_string := fmt.tprintf("Soldiers: %d", len(world.soldiers))
+    count_string := fmt.tprintf("Soldiers: %d | Squads: %d", len(world.soldiers), len(world.squads))
     count_cstring := strings.clone_to_cstring(count_string)
 
     defer delete(count_cstring)

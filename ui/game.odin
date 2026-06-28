@@ -9,6 +9,7 @@ import sdr "../soldier"
 update_game :: proc(current_state: ^gs.GameState, world: ^wld.World) {
     if rl.IsKeyPressed(.BACKSPACE) {
         current_state^ = .PauseMenu
+        return
     }
 
     if rl.IsMouseButtonPressed(.LEFT) {
@@ -30,6 +31,6 @@ update_game :: proc(current_state: ^gs.GameState, world: ^wld.World) {
             y = mouse_position.y
         }
 
-        wld.issue_move_order(world, destination)
+        wld.issue_squad_movement_order(world, destination)
     }
 }
