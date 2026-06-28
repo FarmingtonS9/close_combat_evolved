@@ -31,10 +31,19 @@ main :: proc() {
     game_world := world.init_world()
     defer world.destroy_world(&game_world)
 
-    world.spawn_soldier(&game_world, {300, 300})
-    world.spawn_soldier(&game_world, {330, 300})
-    world.spawn_soldier(&game_world, {360, 300})
-    world.spawn_soldier(&game_world, {390, 300})
+    soldier1 := world.spawn_soldier(&game_world, {300, 300})
+    soldier2 := world.spawn_soldier(&game_world, {330, 300})
+    soldier3 := world.spawn_soldier(&game_world, {360, 300})
+    soldier4 := world.spawn_soldier(&game_world, {390, 300})
+
+    squad_1 := world.create_squad(&game_world)
+
+    world.add_soldier_to_squad(&game_world, squad_1, soldier1)
+    world.add_soldier_to_squad(&game_world, squad_1, soldier2)
+    world.add_soldier_to_squad(&game_world, squad_1, soldier3)
+    world.add_soldier_to_squad(&game_world, squad_1, soldier4)
+
+    world.set_squad_leader(&game_world, squad_1, soldier1)
 
     current_state := gs.GameState.MainMenu
 
