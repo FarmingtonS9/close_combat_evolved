@@ -1,6 +1,5 @@
 package world
 
-import "core:mem"
 import "core:math"
 
 import sdr "../soldier"
@@ -42,6 +41,26 @@ issue_squad_movement_order :: proc(world: ^World, destination: sdr.Position) -> 
     squad.movement_state.has_destination = true
 
     return true
+}
+
+create_squad :: proc(world: ^World, origin: sdr.Position) -> sdr.SquadID {
+    squad_id := world.next_squad_id
+    world.next_squad_id += 1
+
+    new_squad := sdr.default_squad(squad_id, origin)
+    append(&world.squads, new_squad)
+
+    return squad_id
+}
+
+find_squad :: proc(world: ^World, squad_id: sdr.SquadID) -> ^sdr.Squad {
+    for &squad in world.squads {
+        if squad.id == squad_id {
+            return &squad
+        }
+    }
+
+    return nil
 }
 
 update_squads :: proc(world: ^World, dt: f32) {
