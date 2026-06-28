@@ -12,6 +12,7 @@ import "render"
 import gs "game_state"
 import ut "utility"
 import "soldier"
+import "world"
 
 // User Library
 // import "soldier" => this means we're importing a package
@@ -22,27 +23,31 @@ GAME_TITLE :: "Close Combat Evolved"
 main :: proc() {
     fmt.println("Hello World!")
 
-    solider_id : soldier.SoldierID = 1
-
-    soldier1: soldier.Soldier = soldier.default_soldier(solider_id)
-
-    fmt.println(soldier1)
-    soldier.print_state_of_soldier(soldier1)
-
     rl.InitWindow(1280, 720, GAME_TITLE)
     // rl.SetTargetFPS(60)
 
     // orange := rl.Color{255, 180, 0, 255} // How to create customs colours in Raylib
 
+    game_world := world.init_world()
+    defer world.destroy_world(&game_world)
+
+    world.spawn_soldier(&game_world, {300, 300})
+    world.spawn_soldier(&game_world, {330, 300})
+    world.spawn_soldier(&game_world, {360, 300})
+    world.spawn_soldier(&game_world, {390, 300})
+
     current_state := gs.GameState.MainMenu
 
     for !rl.WindowShouldClose() {
+
+        dt := rl.GetFrameTime()
 
         switch current_state {
             case .MainMenu:
                 ui.update_main_menu(&current_state)
             case .Game:
-                ui.update_game(&current_state)
+                ui.update_game(&current_state, &game_world)
+                world.update_world(&game_world, dt)
             case .PauseMenu:
                 ui.update_pause_menu(&current_state)
         }
@@ -53,7 +58,7 @@ main :: proc() {
             case .MainMenu:
                 render.draw_main_menu()
             case .Game:
-                render.draw_game()
+                render.draw_game(&game_world)
             case .PauseMenu:
                 render.draw_pause_menu()
         }

@@ -2,9 +2,9 @@ package soldier
 
 import ut "../utility"
 
-update_psychology :: proc(psych: ^PsychologicalState, physcial_attributes: ^PhysicalAttributes, incoming_fire: f32, exertion: f32, dt: f32) {
+update_psychology :: proc(psych: ^PsychologicalState, physical_attributes: ^PhysicalAttributes, incoming_fire: f32, exertion: f32, dt: f32) {
     // Checks for states of soldiers which should not be updated.
-    if physcial_attributes^.physical_state == .Dead || physcial_attributes^.physical_state == .Incapacitated {
+    if physical_attributes^.physical_state == .Dead || physical_attributes^.physical_state == .Incapacitated {
         return
     }
 
@@ -26,7 +26,7 @@ update_psychology :: proc(psych: ^PsychologicalState, physcial_attributes: ^Phys
     // load_level: f32 = ut.clamp_psychology(carried_load)
     // load_modifier: f32 = 1.0 + load_level * 0.75
 
-    endurance_value: f32 = ut.clamp_physical(physcial_attributes.endurance)
+    endurance_value: f32 = ut.clamp_physical(physical_attributes.endurance)
     endurance_modifier: f32 = 1.25 - endurance_value * 0.50
     
     fatigue_gain: f32 = exertion_level * 0.08 * endurance_modifier
@@ -34,7 +34,7 @@ update_psychology :: proc(psych: ^PsychologicalState, physcial_attributes: ^Phys
 
     psych.fatigue += (fatigue_gain - fatigue_recovery) * dt
 
-    clamp_state(psych, physcial_attributes)
+    clamp_state(psych, physical_attributes)
 
     update_morale(psych, dt)
     update_mental_state(psych)

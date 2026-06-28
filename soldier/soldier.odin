@@ -10,6 +10,8 @@ SoldierID :: distinct u32
 
 Soldier :: struct {
     id: SoldierID,
+    position: Position,
+    movement: MovementState,
     identity: Identity,
     rank: BasicRank,
     psychology_state: PsychologicalState,
@@ -22,6 +24,8 @@ Soldier :: struct {
 default_soldier :: proc(id: SoldierID) -> Soldier {
     return Soldier {
         id = id,
+        position = default_position(),
+        movement = default_movement_state(),
         identity = default_identity(),
         rank = .Private,
         psychology_state = default_psych_state(),
@@ -30,26 +34,17 @@ default_soldier :: proc(id: SoldierID) -> Soldier {
     }
 }
 
-spawn_soldier :: proc() {
-
-}
-
 update_soldier :: proc(soldier: ^Soldier, incoming_fire: f32, exertion: f32, dt: f32) {
     // Checks if soldier is dead
     if !soldier.is_active {
         return
     }
 
+    update_movement(soldier, dt)
+
     update_psychology(&soldier.psychology_state, &soldier.physical_attributes, incoming_fire, exertion, dt)
 
     if soldier.physical_attributes.physical_state == .Dead {
         soldier.is_active = false
     }
-}
-
-// Print state of Soldier
-print_state_of_soldier :: proc(soldier: Soldier) {
-    // fmt.println(soldier.mental_state)
-    // fmt.println(soldier.physical_state)
-    // fmt.println(soldier.stamina_state)
 }
