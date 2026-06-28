@@ -116,7 +116,7 @@ update_squad_origin :: proc(world: ^World, squad: ^sdr.Squad, dt: f32) {
 assign_loose_squad_members :: proc(world: ^World, squad: ^sdr.Squad) {
     forward := squad.movement_state.facing
 
-    right: = sdr.Position {
+    right := sdr.Position {
         x = -forward.y,
         y = forward.x,
     }
@@ -141,7 +141,7 @@ assign_loose_squad_members :: proc(world: ^World, squad: ^sdr.Squad) {
         if distance_squared <= 1.0 {
             soldier.movement.destination = target
             soldier.movement.has_destination = false
-            return
+            continue
         }
 
         soldier.movement.destination = target

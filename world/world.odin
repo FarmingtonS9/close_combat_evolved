@@ -49,29 +49,6 @@ update_world :: proc(world: ^World, dt: f32) {
     }
 }
 
-issue_move_order :: proc(world: ^World, destination: sdr.Position,) -> bool {
-    if world.selected_soldier_id == 0 {
-        return false
-    }
-
-    for &soldier in world.soldiers {
-        if soldier.id != world.selected_soldier_id {
-            continue
-        }
-
-        if !soldier.is_active {
-            return false
-        }
-
-        soldier.movement.destination = destination
-        soldier.movement.has_destination = true
-
-        return true
-    }
-
-    return false
-}
-
 find_soldier_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Squad {
     for &squad in world.squads {
         if !squad.is_active {
@@ -148,7 +125,7 @@ is_selected_squad_member :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bo
         }
     }
 
-    return squad.leader_id == soldier_id
+    return false
 }
 
 is_squad_leader_selected :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {

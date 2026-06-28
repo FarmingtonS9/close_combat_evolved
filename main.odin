@@ -2,15 +2,12 @@ package cc_evolved
 
 // Standard Library
 import "core:fmt"
-import "core:os"
-import "core:strings"
 import rl "vendor:raylib"
 
 // Custom
 import "ui"
 import "render"
 import gs "game_state"
-import ut "utility"
 import "soldier"
 import "world"
 
