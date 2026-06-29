@@ -24,6 +24,10 @@ find_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Soldier {
     return nil
 }
 
+clear_selected_soldier :: proc(world: ^World) {
+    world.selected_soldier_id = 0
+}
+
 selected_soldier_at_position :: proc(world: ^World, position: sdr.Position, selection_radius: f32 = 12.0) -> bool {
     closest_id: sdr.SoldierID = 0
     closest_distance_squared := selection_radius * selection_radius
@@ -49,7 +53,7 @@ selected_soldier_at_position :: proc(world: ^World, position: sdr.Position, sele
         return false
     }
 
-    squad := find_soldier_squad(world, closest_id)
+    squad := find_active_squad_for_soldier(world, closest_id)
 
     if squad == nil {
         world.selected_soldier_id = 0
@@ -63,43 +67,8 @@ selected_soldier_at_position :: proc(world: ^World, position: sdr.Position, sele
     return true
 }
 
-clear_selected_soldier :: proc(world: ^World) {
-    world.selected_soldier_id = 0
-}
-
 is_soldier_selected :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
     return world.selected_soldier_id == soldier_id
-}
-
-add_soldier_to_squad :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.SoldierID, offset: sdr.Position) -> bool {
-    squad := find_squad(world, squad_id)
-
-    if squad == nil || !squad.is_active {
-        return false
-    }
-
-    soldier := find_soldier(world, soldier_id)
-
-    if soldier == nil || !soldier.is_active {
-        return false
-    }
-
-    existing_squad := find_soldier_squad(world, soldier_id)
-
-    if existing_squad != nil {
-        return false
-    }
-
-    append(&squad.members, sdr.SquadMember {
-        soldier_id = soldier_id,
-        offset = offset
-    })
-
-    if squad.leader_id == sdr.SoldierID(0) {
-        squad.leader_id = soldier_id
-    }
-
-    return true
 }
 
 is_soldier_in_selected_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
@@ -117,25 +86,6 @@ is_soldier_in_selected_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -
         if member.soldier_id == soldier_id {
             return true
         }
-    }
-
-    return false
-}
-
-set_squad_leader :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.SoldierID) -> bool {
-    squad := find_squad(world, squad_id)
-
-    if squad == nil {
-        return false
-    }
-
-    for member in squad.members {
-        if member.soldier_id != soldier_id {
-            continue
-        }
-
-        squad.leader_id =soldier_id
-        return true
     }
 
     return false

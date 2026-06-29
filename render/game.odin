@@ -19,7 +19,7 @@ draw_game :: proc(world: ^wrd.World) {
 
         soldier_colour := rl.BLUE
 
-        if wrd.is_selected_squad_member(world, soldier.id) {
+        if wrd.is_soldier_in_selected_squad(world, soldier.id) {
             soldier_colour = rl.RED
 
             if soldier.movement.has_destination {
