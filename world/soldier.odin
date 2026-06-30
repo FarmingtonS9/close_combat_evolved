@@ -46,65 +46,16 @@ get_selected_soldier :: proc(world: ^World) -> ^sdr.Soldier {
     return find_active_soldier(world, world.selected_soldier_id)
 }
 
-selected_soldier_at_position :: proc(world: ^World, position: sdr.Position, selection_radius: f32 = 12.0) -> bool {
-    closest_id: sdr.SoldierID = 0
-    closest_distance_squared := selection_radius * selection_radius
-
-    for &soldier in world.soldiers {
-        if !soldier.is_active {
-            continue
-        }
-
-        dx := soldier.position.x - position.x
-        dy := soldier.position.y - position.y
-        distance_squared := dx * dx + dy * dy
-
-        if distance_squared <= closest_distance_squared {
-            closest_distance_squared = distance_squared
-            closest_id = soldier.id
-        }
-    }
-
-    if closest_id == sdr.SoldierID(0) {
-        world.selected_soldier_id = 0
-        world.selected_squad_id = sdr.NumSquad
-        return false
-    }
-
-    squad := find_active_squad_for_soldier(world, closest_id)
-
-    if squad == nil {
-        world.selected_soldier_id = 0
-        world.selected_squad_id = sdr.NumSquad
-        return false
-    }
-
-    world.selected_soldier_id = closest_id
-    world.selected_squad_id = squad.id
-
-    return true
-}
-
 is_soldier_selected :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
     return world.selected_soldier_id == soldier_id
 }
 
 is_soldier_in_selected_squad :: proc(world: ^World, soldier_id: sdr.SoldierID) -> bool {
-    if world.selected_squad_id == sdr.NumSquad {
+    squad := get_selected_squad(world)
+
+    if squad == nil {
         return false
     }
 
-    squad := find_squad(world, world.selected_squad_id)
-
-    if squad == nil || !squad.is_active {
-        return false
-    }
-
-    for member in squad.members {
-        if member.soldier_id == soldier_id {
-            return true
-        }
-    }
-
-    return false
+    return squad_contains_soldier(squad, soldier_id)
 }

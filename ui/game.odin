@@ -20,7 +20,7 @@ update_game :: proc(current_state: ^gs.GameState, world: ^wld.World) {
             y = mouse_position.y
         }
 
-        wld.select_squad_at_position(world, world_position)
+        wld.select_squad_member_at_position(world, world_position)
     }
 
     if rl.IsMouseButtonPressed(.RIGHT) {
