@@ -253,7 +253,10 @@ find_active_squad_for_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) 
 
 find_squad_member :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> ^sdr.SquadMember {
     for &member in squad.members {
-        return &member
+        if member.soldier_id == soldier_id {
+            return &member
+        }
+        
     }
 
     return nil
