@@ -3,6 +3,12 @@ package soldier
 SquadID :: distinct u32
 NumSquad :: SquadID(0)
 
+SquadSide :: enum {
+    Player,
+    Friendly,
+    Enemy,
+}
+
 SquadMovementMode :: enum {
     Loose,
     Formation,
@@ -25,15 +31,17 @@ SquadMember :: struct {
 
 Squad :: struct {
     id: SquadID,
+    side: SquadSide,
     members: [dynamic]SquadMember,
     leader_id: SoldierID,
     movement_state: SquadMovementState,
     is_active: bool,
 }
 
-default_squad :: proc(squad_id: SquadID, origin: Position) -> Squad {
+default_squad :: proc(squad_id: SquadID, origin: Position, side: SquadSide) -> Squad {
     return Squad {
         id = squad_id,
+        side = side,
         members = make([dynamic]SquadMember),
         leader_id = SoldierID(0),
         movement_state = SquadMovementState {

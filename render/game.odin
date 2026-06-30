@@ -17,10 +17,23 @@ draw_game :: proc(world: ^wrd.World) {
         x := i32(soldier.position.x)
         y := i32(soldier.position.y)
 
-        soldier_colour := rl.BLUE
+        soldier_colour := rl.GRAY
+
+        side, has_squad := wrd.get_soldier_faction_side(world, soldier.id)
+
+        if has_squad {
+            switch side {
+                case .Player:
+                    soldier_colour = rl.DARKBLUE
+                case .Friendly:
+                    soldier_colour = rl.GREEN
+                case .Enemy:
+                    soldier_colour = rl.RED
+            }
+        }
 
         if wrd.is_soldier_in_selected_squad(world, soldier.id) {
-            soldier_colour = rl.RED
+            soldier_colour = rl.BLUE
 
             if soldier.movement.has_destination {
                 destination_x := i32(soldier.movement.destination.x)

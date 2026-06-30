@@ -1,15 +1,14 @@
 package world
 
-import "core:mem"
 import "core:math"
 
 import sdr "../soldier"
 
-create_squad :: proc(world: ^World, origin: sdr.Position) -> sdr.SquadID {
+create_squad :: proc(world: ^World, origin: sdr.Position ,side: sdr.SquadSide,) -> sdr.SquadID {
     squad_id := world.next_squad_id
     world.next_squad_id += 1
 
-    new_squad := sdr.default_squad(squad_id, origin)
+    new_squad := sdr.default_squad(squad_id, origin, side)
     append(&world.squads, new_squad)
 
     return squad_id
@@ -131,9 +130,10 @@ issue_squad_movement_order :: proc(world: ^World, destination: sdr.Position) -> 
 
     leader := find_active_soldier(world, squad.leader_id)
 
-    if leader == nil {
-        return false
-    }
+    // Prevents squads without leaders from being issued orders
+    // if leader == nil {
+    //     return false
+    // }
 
     dx := destination.x - squad.movement_state.origin.x
     dy := destination.y - squad.movement_state.origin.y
@@ -223,7 +223,7 @@ select_squad_member_at_position :: proc(world: ^World, position: sdr.Position, s
         closest_soldier_id,
     )
 
-    if squad == nil {
+    if squad == nil || squad.side != .Player {
         clear_squad_selection(world)
         return false
     }
@@ -265,4 +265,14 @@ squad_contains_soldier :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> 
 
 is_squad_leader :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> bool {
     return squad.leader_id == soldier_id
+}
+
+get_soldier_faction_side :: proc(world: ^World, soldier_id: sdr.SoldierID) -> (sdr.SquadSide, bool) {
+    squad := find_active_squad_for_soldier(world, soldier_id)
+
+    if squad == nil {
+        return .Player, false
+    }
+
+    return squad.side, true
 }
