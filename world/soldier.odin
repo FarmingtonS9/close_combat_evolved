@@ -24,6 +24,16 @@ find_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Soldier {
     return nil
 }
 
+find_active_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) -> ^sdr.Soldier {
+    soldier := find_soldier(world, soldier_id)
+
+    if soldier == nil || !soldier.is_active {
+        return nil
+    }
+
+    return soldier
+}
+
 clear_selected_soldier :: proc(world: ^World) {
     world.selected_soldier_id = 0
 }

@@ -24,6 +24,16 @@ find_squad :: proc(world: ^World, squad_id: sdr.SquadID) -> ^sdr.Squad {
     return nil
 }
 
+find_active_squad :: proc(world: ^World, squad_id: sdr.SquadID) -> ^sdr.Squad {
+    squad := find_squad(world, squad_id)
+
+    if squad == nil || !squad.is_active {
+        return nil
+    }
+
+    return squad
+}
+
 update_squads :: proc(world: ^World, dt: f32) {
     for &squad in world.squads {
         if !squad.is_active {

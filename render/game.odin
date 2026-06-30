@@ -52,4 +52,6 @@ draw_game :: proc(world: ^wrd.World) {
     defer delete(count_cstring)
 
     rl.DrawText(count_cstring, 20, 20, 20, rl.BLACK)
+
+    draw_selected_soldiers_stats(world)
 }
