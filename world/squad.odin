@@ -1,5 +1,6 @@
 package world
 
+import "core:mem"
 import "core:math"
 
 import sdr "../soldier"
@@ -32,6 +33,14 @@ find_active_squad :: proc(world: ^World, squad_id: sdr.SquadID) -> ^sdr.Squad {
     }
 
     return squad
+}
+
+get_selected_squad :: proc(world: ^World) -> ^sdr.Squad {
+    if world.selected_squad_id == sdr.NumSquad {
+        return nil
+    }
+
+    return find_active_squad(world, world.selected_squad_id)
 }
 
 update_squads :: proc(world: ^World, dt: f32) {
@@ -85,21 +94,14 @@ update_squad_origin :: proc(world: ^World, squad: ^sdr.Squad, dt: f32) {
 }
 
 add_soldier_to_squad :: proc(world: ^World, squad_id: sdr.SquadID, soldier_id: sdr.SoldierID, offset: sdr.Position) -> bool {
-    squad := find_squad(world, squad_id)
-
-    if squad == nil || !squad.is_active {
+    squad := find_active_squad(world, squad_id)
+    soldier := find_active_soldier(world, soldier_id)
+    
+    if squad == nil || soldier == nil {
         return false
     }
 
-    soldier := find_soldier(world, soldier_id)
-
-    if soldier == nil || !soldier.is_active {
-        return false
-    }
-
-    existing_squad := find_active_squad_for_soldier(world, soldier_id)
-
-    if existing_squad != nil {
+    if find_active_squad_for_soldier(world, soldier_id) != nil {
         return false
     }
 
@@ -247,4 +249,20 @@ find_active_squad_for_soldier :: proc(world: ^World, soldier_id: sdr.SoldierID) 
     }
 
     return nil
+}
+
+find_squad_member :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> ^sdr.SquadMember {
+    for &member in squad.members {
+        return &member
+    }
+
+    return nil
+}
+
+squad_contains_soldier :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> bool {
+    return find_squad_member(squad, soldier_id) != nil
+}
+
+is_squad_leader :: proc(squad: ^sdr.Squad, soldier_id: sdr.SoldierID) -> bool {
+    return squad.leader_id == soldier_id
 }

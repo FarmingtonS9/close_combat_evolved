@@ -4,7 +4,6 @@ package soldier
 import "core:fmt"
 
 // User library
-// import "weapons" (library)
 
 SoldierID :: distinct u32
 

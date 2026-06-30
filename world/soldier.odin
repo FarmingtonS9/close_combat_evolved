@@ -38,6 +38,14 @@ clear_selected_soldier :: proc(world: ^World) {
     world.selected_soldier_id = 0
 }
 
+get_selected_soldier :: proc(world: ^World) -> ^sdr.Soldier {
+    if world.selected_soldier_id == 0 {
+        return nil
+    }
+
+    return find_active_soldier(world, world.selected_soldier_id)
+}
+
 selected_soldier_at_position :: proc(world: ^World, position: sdr.Position, selection_radius: f32 = 12.0) -> bool {
     closest_id: sdr.SoldierID = 0
     closest_distance_squared := selection_radius * selection_radius
