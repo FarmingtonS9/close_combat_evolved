@@ -10,17 +10,21 @@ import "render"
 import gs "game_state"
 import "soldier"
 import "world"
+import "camera"
 
 // User Library
 // import "soldier" => this means we're importing a package
 
 // Constants
 GAME_TITLE :: "Close Combat Evolved"
+GAME_WIDTH :: 1920
+GAME_HEIGHT :: 1080
 
 main :: proc() {
     fmt.println("Hello World!")
 
-    rl.InitWindow(1280, 720, GAME_TITLE)
+    rl.InitWindow(GAME_WIDTH, GAME_HEIGHT, GAME_TITLE)
+    game_camera := camera.init_camera(GAME_WIDTH, GAME_HEIGHT)
     // rl.SetTargetFPS(60)
 
     // orange := rl.Color{255, 180, 0, 255} // How to create customs colours in Raylib
@@ -77,7 +81,8 @@ main :: proc() {
             case .MainMenu:
                 ui.update_main_menu(&current_state)
             case .Game:
-                ui.update_game(&current_state, &game_world)
+                camera.update_camera(&game_camera, dt)
+                ui.update_game(&current_state, &game_world, &game_camera)
                 world.update_world(&game_world, dt)
             case .PauseMenu:
                 ui.update_pause_menu(&current_state)
@@ -89,7 +94,7 @@ main :: proc() {
             case .MainMenu:
                 render.draw_main_menu()
             case .Game:
-                render.draw_game(&game_world)
+                render.draw_game(&game_world, &game_camera)
             case .PauseMenu:
                 render.draw_pause_menu()
         }

@@ -5,9 +5,12 @@ import "core:strings"
 import rl "vendor:raylib"
 
 import wrd "../world"
+import cam "../camera"
 
-draw_game :: proc(world: ^wrd.World) {
+draw_game :: proc(world: ^wrd.World, camera: ^cam.CameraController) {
     rl.ClearBackground(rl.RAYWHITE)
+
+    rl.BeginMode2D(camera.camera)
 
     for &soldier in world.soldiers {
         if !soldier.is_active {
@@ -58,6 +61,8 @@ draw_game :: proc(world: ^wrd.World) {
 
         delete(id_text_cstring)
     }
+
+    rl.EndMode2D()
 
     count_string := fmt.tprintf("Soldiers: %d | Squads: %d", len(world.soldiers), len(world.squads))
     count_cstring := strings.clone_to_cstring(count_string)
