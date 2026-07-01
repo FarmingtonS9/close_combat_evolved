@@ -18,8 +18,8 @@ update_game :: proc(current_state: ^gs.GameState, world: ^wld.World, camera: ^ca
         world_mouse := cam.screen_to_world(camera, mouse_position)
 
         world_position := sdr.Position {
-            x = mouse_position.x,
-            y = mouse_position.y
+            x = world_mouse.x,
+            y = world_mouse.y
         }
 
         wld.select_squad_member_at_position(world, world_position)
@@ -30,8 +30,8 @@ update_game :: proc(current_state: ^gs.GameState, world: ^wld.World, camera: ^ca
         world_mouse := cam.screen_to_world(camera, mouse_position)
 
         destination := sdr.Position {
-            x = mouse_position.x,
-            y = mouse_position.y
+            x = world_mouse.x,
+            y = world_mouse.y
         }
 
         wld.issue_squad_movement_order(world, destination)

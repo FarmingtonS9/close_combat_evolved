@@ -64,6 +64,7 @@ draw_game :: proc(world: ^wrd.World, camera: ^cam.CameraController) {
 
     rl.EndMode2D()
 
+    // UI
     count_string := fmt.tprintf("Soldiers: %d | Squads: %d", len(world.soldiers), len(world.squads))
     count_cstring := strings.clone_to_cstring(count_string)
 
