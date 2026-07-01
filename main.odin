@@ -98,7 +98,8 @@ main :: proc() {
             case .Game:
                 render.draw_game(&game_world, &game_camera)
             case .PauseMenu:
-                render.draw_pause_menu(&current_state)
+                render.draw_pause_menu()
+                render.update_pause_menu(&current_state)
         }
         ui.display_fps()
         rl.EndDrawing()
