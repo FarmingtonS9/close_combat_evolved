@@ -223,8 +223,12 @@ select_squad_member_at_position :: proc(world: ^World, position: sdr.Position, s
         closest_soldier_id,
     )
 
-    if squad == nil || squad.side != .Player {
+    if squad == nil {
         clear_squad_selection(world)
+        return false
+    }
+
+    if squad.side != .Player {
         return false
     }
 
