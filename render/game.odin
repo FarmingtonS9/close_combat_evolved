@@ -62,6 +62,8 @@ draw_game :: proc(world: ^wrd.World, camera: ^cam.CameraController) {
         delete(id_text_cstring)
     }
 
+    draw_selected_squad_destination(world)
+
     rl.EndMode2D()
 
     // UI

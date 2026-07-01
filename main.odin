@@ -1,5 +1,6 @@
 package cc_evolved
 
+import "core:c"
 // Standard Library
 import "core:fmt"
 import rl "vendor:raylib"
@@ -24,6 +25,7 @@ main :: proc() {
     fmt.println("Hello World!")
 
     rl.InitWindow(GAME_WIDTH, GAME_HEIGHT, GAME_TITLE)
+    rl.SetExitKey(.KEY_NULL)
     game_camera := camera.init_camera(GAME_WIDTH, GAME_HEIGHT)
     // rl.SetTargetFPS(60)
 
@@ -96,7 +98,7 @@ main :: proc() {
             case .Game:
                 render.draw_game(&game_world, &game_camera)
             case .PauseMenu:
-                render.draw_pause_menu()
+                render.draw_pause_menu(&current_state)
         }
         ui.display_fps()
         rl.EndDrawing()

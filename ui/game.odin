@@ -8,8 +8,13 @@ import sdr "../soldier"
 import cam "../camera"
 
 update_game :: proc(current_state: ^gs.GameState, world: ^wld.World, camera: ^cam.CameraController) {
-    if rl.IsKeyPressed(.BACKSPACE) {
-        current_state^ = .PauseMenu
+    if rl.IsKeyPressed(.ESCAPE) {
+        if wld.get_selected_squad(world) != nil {
+            wld.clear_squad_selection(world)
+        } else {
+            current_state^ = .PauseMenu
+        }
+        
         return
     }
 

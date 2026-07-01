@@ -26,12 +26,20 @@ init_camera :: proc(screen_width: i32, screen_height: i32) -> CameraController {
 }
 
 update_camera :: proc(camera: ^CameraController, dt: f32) {
-    speed := camera.move_speed * dt / camera.camera.zoom
+    speed_multiplier : f32 = 1.0
+    if rl.IsKeyDown(.LEFT_SHIFT) {
+        speed_multiplier *= 2
+    }
+    speed := camera.move_speed * speed_multiplier * dt / camera.camera.zoom 
+
+    if rl.IsKeyDown(.W) { camera.camera.target.y -= speed }
+    if rl.IsKeyDown(.S) { camera.camera.target.y += speed }
+    if rl.IsKeyDown(.A) { camera.camera.target.x -= speed }
+    if rl.IsKeyDown(.D) { camera.camera.target.x += speed }
 
     if rl.IsKeyDown(.W) { 
         if rl.IsKeyDown(.LEFT_SHIFT) {
             camera.camera.target.y -= speed * 2
-        } else {
             camera.camera.target.y -= speed            
         }
         
@@ -63,14 +71,15 @@ update_camera :: proc(camera: ^CameraController, dt: f32) {
 
     if rl.IsMouseButtonDown(.MIDDLE) {
         mouse_movement_delta := rl.GetMouseDelta()
+        speed_multiplier : f32 = 1.0
+        drag_speed := 1.0 / camera.camera.zoom
 
         if rl.IsKeyDown(.LEFT_SHIFT) {
-            camera.camera.target.y -= mouse_movement_delta.y * camera.move_speed * dt * 2
-            camera.camera.target.x -= mouse_movement_delta.x * camera.move_speed * dt * 2
-        } else {
-            camera.camera.target.y -= mouse_movement_delta.y * camera.move_speed * dt
-            camera.camera.target.x -= mouse_movement_delta.x * camera.move_speed * dt
+            speed_multiplier *= 2
         }
+
+        camera.camera.target.y -= mouse_movement_delta.y * drag_speed * speed_multiplier
+        camera.camera.target.x -= mouse_movement_delta.x * drag_speed * speed_multiplier
     }
 
     wheel :=  rl.GetMouseWheelMove()
